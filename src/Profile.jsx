@@ -1,0 +1,197 @@
+import React, { useState } from 'react';
+import './Home.css';    // Réutilisation essentielle pour le style de la NavBar et des Cartes Projets
+import './Profile.css';
+
+const Profile = ({ onNavigate, onLogout }) => {
+  const [activeTab, setActiveTab] = useState('created');
+  const [showProfileMenu, setShowProfileMenu] = useState(false);
+
+  // Les projets créés par cet utilisateur
+  const createdProjects = [
+    {
+      id: 2,
+      title: "Dar El Harka : Coworking & Artisanat",
+      creator: "Par Ayoub B. (Vous)",
+      desc: "Rénovation d'une maison historique de la Medina pour la transformer en espace de création pour les jeunes artisans tunisiens.",
+      image: "https://images.unsplash.com/photo-1528157777178-0062a444aeb8?w=800&q=80",
+      funded: 115,
+      collected: "46 000 DT",
+      daysLeft: 2,
+      category: "Culture & Économie"
+    }
+  ];
+
+  return (
+    <div className="profile-page-wrapper">
+      
+      {/* Privacy Banner */}
+      <div className="profile-privacy-banner">
+        <div className="banner-text">
+          <span style={{color: '#0ce688', fontSize: '18px'}}>👁️</span> 
+          Cette page de profil n'est visible que par vous.
+        </div>
+        <button className="banner-btn" onClick={() => onNavigate('settings')}>Gérer vos paramètres de confidentialité</button>
+      </div>
+
+      {/* Navbar simplifiée */}
+      <nav className="navbar" style={{ zIndex: 10, position: 'relative' }}>
+        <div className="nav-left">
+          <h1 className="nav-logo" onClick={() => onNavigate('home')}>Hive.tn</h1>
+        </div>
+        <div className="nav-right">
+          <button className="nav-btn-solid" style={{marginRight: '20px'}} onClick={() => onNavigate('home')}>Retour à l'accueil</button>
+          <div className="user-profile-container">
+            <div className="user-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
+               <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" alt="Avatar Utilisateur" />
+            </div>
+            {showProfileMenu && (
+              <div className="profile-dropdown">
+                <div className="dropdown-header">
+                  <span className="text-bold" style={{ color: '#fff' }}>Ayoub B.</span>
+                  <span className="text-small" style={{ color: '#a1a1aa', fontSize: '13px' }}>ayoub@hive.tn</span>
+                </div>
+                <div className="dropdown-divider"></div>
+                <div className="dropdown-item" onClick={() => onNavigate('profile')}>👤 Profil</div>
+                <div className="dropdown-item" onClick={() => onNavigate('settings')}>⚙️ Paramètres</div>
+                <div className="dropdown-item" onClick={() => onNavigate('saved')}>🔖 Enregistrements</div>
+                <div className="dropdown-divider"></div>
+                <div className="dropdown-item text-danger" onClick={() => {
+                  setShowProfileMenu(false);
+                  if (onLogout) onLogout();
+                }}>🚪 Déconnexion</div>
+              </div>
+            )}
+          </div>
+        </div>
+      </nav>
+
+      <div className="profile-main">
+        
+        {/* Header Avatar and Info */}
+        <div className="profile-header">
+          <div className="profile-large-avatar">
+            <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=400&q=80" alt="Ayoub B." />
+          </div>
+          <h1 className="profile-name">Ayoub B.</h1>
+          <div className="profile-meta">
+            Soutenu 0 projet · Rejoint Fév 2026
+          </div>
+        </div>
+
+        {/* Superbacker component */}
+        <div className="superbacker-card">
+          <div className="superbacker-icon">
+            ⭐
+          </div>
+          <div className="superbacker-content">
+            <div className="superbacker-title">
+              0 sur 25 projets avant le statut Super-Contributeur Hive
+            </div>
+            <a className="superbacker-link" onClick={() => {}}>En savoir plus sur le statut de Super-Contributeur</a>
+            <div className="superbacker-progress-bg">
+              <div className="superbacker-progress-fill"></div>
+            </div>
+            <button className="nav-btn-solid" style={{ padding: '8px 24px', fontSize: '14px' }} onClick={() => onNavigate('home')}>
+              Soutenir des projets
+            </button>
+          </div>
+        </div>
+
+        {/* Tabs System */}
+        <div className="profile-tabs-container">
+          <div className="profile-tabs">
+            <span 
+              className={`profile-tab ${activeTab === 'about' ? 'active' : ''}`}
+              onClick={() => setActiveTab('about')}
+            >
+              À propos
+            </span>
+            <span 
+              className={`profile-tab ${activeTab === 'backed' ? 'active' : ''}`}
+              onClick={() => setActiveTab('backed')}
+            >
+              Soutenus <span>0</span>
+            </span>
+            <span 
+              className={`profile-tab ${activeTab === 'created' ? 'active' : ''}`}
+              onClick={() => setActiveTab('created')}
+            >
+              Créés <span>1</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'about' && (
+          <div className="profile-content-empty">
+            <h3>Aucune biographie</h3>
+            <p>Vous n'avez pas encore ajouté de description à votre profil public.</p>
+            <button className="settings-btn-outline" onClick={() => onNavigate('settings')}>Ajouter une bio</button>
+          </div>
+        )}
+
+        {activeTab === 'backed' && (
+          <div className="profile-content-empty">
+            <h3>Vous n'avez soutenu aucun projet.</h3>
+            <p>Il est temps de changer ça ! Découvrez des idées innovantes.</p>
+            <button className="settings-btn-outline" onClick={() => onNavigate('home')} style={{ color: '#05ce78', borderColor: '#05ce78' }}>
+              Découvrir des projets
+            </button>
+          </div>
+        )}
+
+        {/* The Created Projects Tab requested by User */}
+        {activeTab === 'created' && (
+          <div className="projects-section" style={{ padding: '0', maxWidth: '100%' }}>
+            {/* Using grid columns specifically for profile view to maintain proportionality */}
+            <div className="projects-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 350px))', justifyContent: 'center' }}>
+              {createdProjects.map(project => (
+                <div key={project.id} className="project-card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('projectDetails')}>
+                  <div className="project-image-container">
+                    <div className="project-badge">{project.category}</div>
+                    <img src={project.image} alt={project.title} className="project-image" />
+                  </div>
+                  <div className="project-content">
+                    <h3 className="project-title">{project.title}</h3>
+                    <div className="project-creator">{project.creator}</div>
+                    <p className="project-desc">{project.desc}</p>
+                    
+                    <div className="project-stats">
+                      <div className="progress-bar-bg">
+                        <div className="progress-bar-fill" style={{ width: `${Math.min(project.funded, 100)}%` }}></div>
+                      </div>
+                      <div className="stats-row">
+                        <div className="stat-item">
+                          <span className="stat-value">{project.funded}%</span>
+                          <span className="stat-label">financé</span>
+                        </div>
+                        <div className="stat-item" style={{ textAlign: 'center' }}>
+                          <span className="stat-value" style={{ color: '#fff' }}>{project.collected}</span>
+                          <span className="stat-label">récolté</span>
+                        </div>
+                        <div className="stat-item" style={{ textAlign: 'right' }}>
+                          <span className="stat-value" style={{ color: '#fff' }}>{project.daysLeft}</span>
+                          <span className="stat-label">jours restants</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div style={{ marginTop: '24px' }}>
+                       <button className="settings-btn-outline" style={{ width: '100%', borderColor: '#05ce78', color: '#05ce78' }}>
+                         Gérer la campagne
+                       </button>
+                    </div>
+
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+      </div>
+    </div>
+  );
+};
+
+export default Profile;
