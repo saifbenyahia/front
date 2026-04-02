@@ -1,45 +1,21 @@
 import React, { useState } from 'react';
 import './Home.css';
 import './ProjectDetails.css';
+import Navbar from './Navbar';
 
-const ProjectDetails = ({ onNavigate, onLogout }) => {
+const ProjectDetails = ({ onNavigate, isAuthenticated, onLogout }) => {
   const [activeTab, setActiveTab] = useState('campaign');
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   return (
     <div className="project-details-wrapper">
       
-      {/* Navbar simplifiée */}
-      <nav className="navbar" style={{ zIndex: 110, position: 'relative' }}>
-        <div className="nav-left">
-          <h1 className="nav-logo" onClick={() => onNavigate('home')}>Hive.tn</h1>
-        </div>
-        <div className="nav-right">
-          <button className="nav-btn-solid" style={{marginRight: '20px'}} onClick={() => onNavigate('home')}>Retour à l'accueil</button>
-          <div className="user-profile-container">
-            <div className="user-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
-               <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" alt="Avatar Utilisateur" />
-            </div>
-            {showProfileMenu && (
-              <div className="profile-dropdown">
-                <div className="dropdown-header">
-                  <span className="text-bold" style={{ color: '#fff' }}>Ayoub B.</span>
-                  <span className="text-small" style={{ color: '#a1a1aa', fontSize: '13px' }}>ayoub@hive.tn</span>
-                </div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item" onClick={() => onNavigate('profile')}>👤 Profil</div>
-                <div className="dropdown-item" onClick={() => onNavigate('settings')}>⚙️ Paramètres</div>
-                <div className="dropdown-item" onClick={() => onNavigate('saved')}>🔖 Enregistrements</div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item text-danger" onClick={() => {
-                  setShowProfileMenu(false);
-                  if (onLogout) onLogout();
-                }}>🚪 Déconnexion</div>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
+      {/* Navbar Principale */}
+      <Navbar 
+        onNavigate={onNavigate} 
+        isAuthenticated={isAuthenticated} 
+        onLogout={onLogout} 
+        activeTab="projectDetails" 
+      />
 
       <div className="pd-main">
         {/* Header */}
@@ -134,13 +110,13 @@ const ProjectDetails = ({ onNavigate, onLogout }) => {
 
       {/* Tabs Menu */}
       <div className="pd-tabs-nav">
-        <div className="pd-tabs-container">
-          <span className={`pd-tab ${activeTab === 'campaign' ? 'active' : ''}`} onClick={() => setActiveTab('campaign')}>Campagne</span>
-          <span className={`pd-tab ${activeTab === 'rewards' ? 'active' : ''}`} onClick={() => setActiveTab('rewards')}>Récompenses <span className="pd-tab-count">4</span></span>
-          <span className={`pd-tab ${activeTab === 'faq' ? 'active' : ''}`} onClick={() => setActiveTab('faq')}>FAQ <span className="pd-tab-count">2</span></span>
-          <span className={`pd-tab ${activeTab === 'updates' ? 'active' : ''}`} onClick={() => setActiveTab('updates')}>Mises à jour <span className="pd-tab-count">8</span></span>
-          <span className={`pd-tab ${activeTab === 'comments' ? 'active' : ''}`} onClick={() => setActiveTab('comments')}>Commentaires <span className="pd-tab-count">412</span></span>
-          <span className={`pd-tab ${activeTab === 'community' ? 'active' : ''}`} onClick={() => setActiveTab('community')}>Communauté</span>
+        <div className="pd-tabs-container" role="tablist" aria-label="Navigation du projet">
+          <span className={`pd-tab ${activeTab === 'campaign' ? 'active' : ''}`} onClick={() => setActiveTab('campaign')} role="tab" aria-selected={activeTab === 'campaign'} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setActiveTab('campaign')}>Campagne</span>
+          <span className={`pd-tab ${activeTab === 'rewards' ? 'active' : ''}`} onClick={() => setActiveTab('rewards')} role="tab" aria-selected={activeTab === 'rewards'} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setActiveTab('rewards')}>Récompenses <span className="pd-tab-count">4</span></span>
+          <span className={`pd-tab ${activeTab === 'faq' ? 'active' : ''}`} onClick={() => setActiveTab('faq')} role="tab" aria-selected={activeTab === 'faq'} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setActiveTab('faq')}>FAQ <span className="pd-tab-count">2</span></span>
+          <span className={`pd-tab ${activeTab === 'updates' ? 'active' : ''}`} onClick={() => setActiveTab('updates')} role="tab" aria-selected={activeTab === 'updates'} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setActiveTab('updates')}>Mises à jour <span className="pd-tab-count">8</span></span>
+          <span className={`pd-tab ${activeTab === 'comments' ? 'active' : ''}`} onClick={() => setActiveTab('comments')} role="tab" aria-selected={activeTab === 'comments'} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setActiveTab('comments')}>Commentaires <span className="pd-tab-count">412</span></span>
+          <span className={`pd-tab ${activeTab === 'community' ? 'active' : ''}`} onClick={() => setActiveTab('community')} role="tab" aria-selected={activeTab === 'community'} tabIndex={0} onKeyDown={(e) => e.key === 'Enter' && setActiveTab('community')}>Communauté</span>
         </div>
       </div>
 

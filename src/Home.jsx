@@ -1,19 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React from 'react';
 import './Home.css';
+import Navbar from './Navbar';
+import ProjectCard from './components/ProjectCard';
 
 const Home = ({ onNavigate, isAuthenticated, onLogout }) => {
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
-  const menuRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (menuRef.current && !menuRef.current.contains(event.target)) {
-        setShowProfileMenu(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const handleCreateProject = () => {
+    if (isAuthenticated) {
+      onNavigate('startProject');
+    } else {
+      onNavigate('signIn', 'Vous devez être connecté pour créer un projet.');
+    }
+  };
 
   const projects = [
     {
@@ -56,50 +53,12 @@ const Home = ({ onNavigate, isAuthenticated, onLogout }) => {
       <div className="home-content-wrapper">
         
         {/* Navigation */}
-        <nav className="navbar">
-          <div className="nav-left">
-            <h1 className="nav-logo" onClick={() => onNavigate('home')}>Hive.tn</h1>
-          </div>
-          <div className="nav-center">
-            <span className="nav-link active">Découvrir</span>
-            <span className="nav-link" style={{cursor: 'pointer'}} onClick={() => onNavigate('startProject')}>Lancer un projet</span>
-          </div>
-          <div className="nav-right">
-            {!isAuthenticated ? (
-              <>
-                <span className="nav-link" onClick={() => onNavigate('signIn')}>Connexion</span>
-                <button className="nav-btn-solid" onClick={() => onNavigate('signUp')}>S'inscrire</button>
-              </>
-            ) : (
-              <div className="user-profile-container" ref={menuRef}>
-                <div 
-                  className="user-avatar" 
-                  onClick={() => setShowProfileMenu(!showProfileMenu)}
-                >
-                  <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" alt="Avatar Utilisateur" />
-                </div>
-                
-                {showProfileMenu && (
-                  <div className="profile-dropdown">
-                    <div className="dropdown-header">
-                      <strong>Ayoub B.</strong>
-                      <span className="text-small" style={{ color: '#a1a1aa', fontSize: '13px' }}>ayoub@hive.tn</span>
-                    </div>
-                    <div className="dropdown-divider"></div>
-                    <div className="dropdown-item" onClick={() => onNavigate('profile')}>👤 Profil</div>
-                    <div className="dropdown-item" onClick={() => onNavigate('settings')}>⚙️ Paramètres</div>
-                    <div className="dropdown-item" onClick={() => onNavigate('saved')}>🔖 Enregistrements</div>
-                    <div className="dropdown-divider"></div>
-                    <div className="dropdown-item text-danger" onClick={() => {
-                      setShowProfileMenu(false);
-                      onLogout();
-                    }}>🚪 Déconnexion</div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        </nav>
+        <Navbar 
+          onNavigate={onNavigate} 
+          isAuthenticated={isAuthenticated} 
+          onLogout={onLogout} 
+          activeTab="home" 
+        />
 
         {/* Hero Banner */}
         <section className="hero-section">
@@ -111,7 +70,7 @@ const Home = ({ onNavigate, isAuthenticated, onLogout }) => {
           </p>
           <div className="hero-actions">
             <button className="hero-btn-primary" onClick={() => onNavigate('discover')}>Soutenir un projet</button>
-            <button className="hero-btn-secondary" onClick={() => onNavigate('signUp')}>Créer mon projet</button>
+            <button className="hero-btn-secondary" onClick={handleCreateProject}>Créer mon projet</button>
           </div>
         </section>
 
@@ -121,37 +80,7 @@ const Home = ({ onNavigate, isAuthenticated, onLogout }) => {
           
           <div className="projects-grid">
             {projects.map(project => (
-              <div key={project.id} className="project-card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('projectDetails')}>
-                <div className="project-image-container">
-                  <div className="project-badge">{project.category}</div>
-                  <img src={project.image} alt={project.title} className="project-image" />
-                </div>
-                <div className="project-content">
-                  <h3 className="project-title">{project.title}</h3>
-                  <div className="project-creator">{project.creator}</div>
-                  <p className="project-desc">{project.desc}</p>
-                  
-                  <div className="project-stats">
-                    <div className="progress-bar-bg">
-                      <div className="progress-bar-fill" style={{ width: `${Math.min(project.funded, 100)}%` }}></div>
-                    </div>
-                    <div className="stats-row">
-                      <div className="stat-item">
-                        <span className="stat-value">{project.funded}%</span>
-                        <span className="stat-label">financé</span>
-                      </div>
-                      <div className="stat-item" style={{ textAlign: 'center' }}>
-                        <span className="stat-value" style={{ color: '#fff' }}>{project.collected}</span>
-                        <span className="stat-label">récolté</span>
-                      </div>
-                      <div className="stat-item" style={{ textAlign: 'right' }}>
-                        <span className="stat-value" style={{ color: '#fff' }}>{project.daysLeft}</span>
-                        <span className="stat-label">jours restants</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              <ProjectCard key={project.id} project={project} onNavigate={onNavigate} />
             ))}
           </div>
         </section>

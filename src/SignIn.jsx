@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
 import './SignIn.css';
 
-const SignIn = ({ onSwitch, onForgotPassword, onHome }) => {
+const SignIn = ({ onSwitch, onForgotPassword, onHome, message }) => {
   const [showPassword, setShowPassword] = useState(false);
   return (
     <div className="auth-container">
       <div className="auth-card">
         <div className="auth-header">
           <h1 className="auth-logo" style={{ cursor: 'pointer' }} onClick={onHome}>Hive.tn</h1>
+          {message && (
+            <div style={{ background: 'rgba(255, 77, 79, 0.1)', color: '#ff4d4f', padding: '12px 16px', borderRadius: '8px', marginBottom: '20px', fontSize: '14px', border: '1px solid rgba(255, 77, 79, 0.3)', textAlign: 'center' }}>
+              ⚠️ {message}
+            </div>
+          )}
           <h2 className="auth-title">Bon retour !</h2>
           <p className="auth-subtitle">Connectez-vous pour retrouver vos projets et vos dons.</p>
         </div>

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Home.css';
 import './SavedProjects.css';
+import Navbar from './Navbar';
+import ProjectCard from './components/ProjectCard';
 
-const SavedProjects = ({ onNavigate, onLogout }) => {
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+const SavedProjects = ({ onNavigate, isAuthenticated, onLogout }) => {
   const savedProjects = [
     {
       id: 4,
@@ -32,37 +33,13 @@ const SavedProjects = ({ onNavigate, onLogout }) => {
   return (
     <div className="saved-page-wrapper">
       
-      {/* Navbar simplifiée */}
-      <nav className="navbar" style={{ zIndex: 10, position: 'relative' }}>
-        <div className="nav-left">
-          <h1 className="nav-logo" onClick={() => onNavigate('home')}>Hive.tn</h1>
-        </div>
-        <div className="nav-right">
-          <button className="nav-btn-solid" style={{marginRight: '20px'}} onClick={() => onNavigate('home')}>Retour à l'accueil</button>
-          <div className="user-profile-container">
-            <div className="user-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
-               <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" alt="Avatar Utilisateur" />
-            </div>
-            {showProfileMenu && (
-              <div className="profile-dropdown">
-                <div className="dropdown-header">
-                  <span className="text-bold" style={{ color: '#fff' }}>Ayoub B.</span>
-                  <span className="text-small" style={{ color: '#a1a1aa', fontSize: '13px' }}>ayoub@hive.tn</span>
-                </div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item" onClick={() => onNavigate('profile')}>👤 Profil</div>
-                <div className="dropdown-item" onClick={() => onNavigate('settings')}>⚙️ Paramètres</div>
-                <div className="dropdown-item" onClick={() => onNavigate('saved')}>🔖 Enregistrements</div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item text-danger" onClick={() => {
-                  setShowProfileMenu(false);
-                  if (onLogout) onLogout();
-                }}>🚪 Déconnexion</div>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
+      {/* Navbar Principale */}
+      <Navbar 
+        onNavigate={onNavigate} 
+        isAuthenticated={isAuthenticated} 
+        onLogout={onLogout} 
+        activeTab="saved" 
+      />
 
       <div className="saved-main">
         {/* Header de la page */}
@@ -76,49 +53,19 @@ const SavedProjects = ({ onNavigate, onLogout }) => {
         <div className="projects-section" style={{ padding: '0', maxWidth: '100%' }}>
           <div className="projects-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 350px))', justifyContent: 'center' }}>
             {savedProjects.map(project => (
-              <div key={project.id} className="project-card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('projectDetails')}>
-                <div className="project-image-container">
-                  <div className="project-badge">{project.category}</div>
-                  <img src={project.image} alt={project.title} className="project-image" />
-                  
-                  {/* Bouton pour retirer des favoris (simulé) */}
-                  <div className="saved-bookmark-active">
-                    🔖 Enregistré
-                  </div>
-                </div>
-                <div className="project-content">
-                  <h3 className="project-title">{project.title}</h3>
-                  <div className="project-creator">{project.creator}</div>
-                  <p className="project-desc">{project.desc}</p>
-                  
-                  <div className="project-stats">
-                    <div className="progress-bar-bg">
-                      <div className="progress-bar-fill" style={{ width: `${Math.min(project.funded, 100)}%` }}></div>
-                    </div>
-                    <div className="stats-row">
-                      <div className="stat-item">
-                        <span className="stat-value">{project.funded}%</span>
-                        <span className="stat-label">financé</span>
-                      </div>
-                      <div className="stat-item" style={{ textAlign: 'center' }}>
-                        <span className="stat-value" style={{ color: '#fff' }}>{project.collected}</span>
-                        <span className="stat-label">récolté</span>
-                      </div>
-                      <div className="stat-item" style={{ textAlign: 'right' }}>
-                        <span className="stat-value" style={{ color: '#fff' }}>{project.daysLeft}</span>
-                        <span className="stat-label">jours restants</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div style={{ marginTop: '24px' }}>
-                     <button className="nav-btn-solid" style={{ width: '100%', padding: '10px', fontSize: '15px' }}>
-                       Soutenir ce projet
-                     </button>
-                  </div>
-
-                </div>
-              </div>
+              <ProjectCard 
+                key={project.id} 
+                project={project} 
+                onNavigate={onNavigate}
+                overlay={
+                  <>🔖 Enregistré</>
+                }
+                actions={
+                  <button className="nav-btn-solid" style={{ width: '100%', padding: '10px', fontSize: '15px' }}>
+                    Soutenir ce projet
+                  </button>
+                }
+              />
             ))}
           </div>
         </div>

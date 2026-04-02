@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './Home.css';
 import './StartProject.css';
+import Navbar from './Navbar';
 
-const StartProject = ({ onNavigate, onLogout }) => {
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+const StartProject = ({ onNavigate, isAuthenticated, onLogout }) => {
 
-  const handleStartPropject = () => {
+  const handleStartProject = () => {
     onNavigate('createProjectStep1');
   };
 
@@ -13,40 +13,12 @@ const StartProject = ({ onNavigate, onLogout }) => {
     <div className="start-page-wrapper">
       
       {/* Navbar Principale (Hive Standard) */}
-      <nav className="navbar" style={{ zIndex: 110, position: 'relative' }}>
-        <div className="nav-left">
-          <h1 className="nav-logo" onClick={() => onNavigate('home')}>Hive.tn</h1>
-        </div>
-        <div className="nav-center">
-          <span className="nav-link" style={{cursor: 'pointer'}} onClick={() => onNavigate('discover')}>Découvrir</span>
-          <span className="nav-link active">Lancer un projet</span>
-        </div>
-        <div className="nav-right">
-          <button className="nav-btn-solid" style={{marginRight: '20px'}} onClick={() => onNavigate('home')}>Accueil</button>
-          <div className="user-profile-container">
-            <div className="user-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
-               <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" alt="Avatar Utilisateur" />
-            </div>
-            {showProfileMenu && (
-              <div className="profile-dropdown">
-                <div className="dropdown-header">
-                  <span className="text-bold" style={{ color: '#fff' }}>Ayoub B.</span>
-                  <span className="text-small" style={{ color: '#a1a1aa', fontSize: '13px' }}>ayoub@hive.tn</span>
-                </div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item" onClick={() => onNavigate('profile')}>👤 Profil</div>
-                <div className="dropdown-item" onClick={() => onNavigate('settings')}>⚙️ Paramètres</div>
-                <div className="dropdown-item" onClick={() => onNavigate('saved')}>🔖 Enregistrements</div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item text-danger" onClick={() => {
-                  setShowProfileMenu(false);
-                  if (onLogout) onLogout();
-                }}>🚪 Déconnexion</div>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Navbar 
+        onNavigate={onNavigate} 
+        isAuthenticated={isAuthenticated} 
+        onLogout={onLogout} 
+        activeTab="startProject" 
+      />
 
       <div className="start-main">
         {/* 1. Hero Section */}
@@ -56,10 +28,10 @@ const StartProject = ({ onNavigate, onLogout }) => {
             <p className="sp-hero-subtitle">
               Hive.tn est la plateforme N°1 en Tunisie pour financer vos rêves créatifs, entrepreneuriaux et solidaires, sans la complexité des banques traditionnelles.
             </p>
-            <button className="sp-hero-cta" onClick={handleStartPropject}>Lancer mon projet</button>
+            <button className="sp-hero-cta" onClick={handleStartProject}>Lancer mon projet</button>
           </div>
           <div className="sp-hero-img-col">
-            <img src="/creator_hero_3.jpg" alt="Créer un projet sur Hive" className="sp-hero-img" />
+            <img src="/creator_hero_3.jpg" alt="Créer un projet sur Hive" className="sp-hero-img" loading="lazy" />
           </div>
         </section>
 
@@ -133,7 +105,7 @@ const StartProject = ({ onNavigate, onLogout }) => {
               <div className="sp-quote-mark">"</div>
               <p className="sp-quote-text">Grâce à Hive.tn, j'ai pu rassembler les fonds nécessaires pour ouvrir mon atelier de céramique en plein cœur de la Médina. Les banques refusaient mon dossier, mais la communauté y a cru !</p>
               <div className="sp-quote-author">
-                <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&q=80" alt="Sélim Trabelsi" className="sp-quote-avatar" />
+                <img src="https://images.unsplash.com/photo-1599566150163-29194dcaad36?w=100&q=80" alt="Sélim Trabelsi" className="sp-quote-avatar" loading="lazy" />
                 <div>
                   <span className="sp-quote-name">Sélim Trabelsi</span>
                   <span className="sp-quote-role">Fondateur, Reconnué</span>
@@ -144,7 +116,7 @@ const StartProject = ({ onNavigate, onLogout }) => {
               <div className="sp-quote-mark">"</div>
               <p className="sp-quote-text">L'accompagnement de l'équipe et la simplicité de la plateforme ont fait toute la différence. Notre festival a battu des records de préventes grâce à notre campagne de financement.</p>
               <div className="sp-quote-author">
-                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Amina L." className="sp-quote-avatar" />
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Amina L." className="sp-quote-avatar" loading="lazy" />
                 <div>
                   <span className="sp-quote-name">Amina L.</span>
                   <span className="sp-quote-role">Directrice, Sicca Jazz</span>
@@ -199,7 +171,7 @@ const StartProject = ({ onNavigate, onLogout }) => {
 
           <div className="sp-final-cta">
             <h2 className="sp-final-text">Votre succès commence par un premier pas.</h2>
-            <button className="sp-hero-cta" onClick={handleStartPropject}>Commencer maintenant</button>
+            <button className="sp-hero-cta" onClick={handleStartProject}>Commencer maintenant</button>
           </div>
         </section>
 

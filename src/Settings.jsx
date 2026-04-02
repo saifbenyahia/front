@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import './Settings.css';
+import Navbar from './Navbar';
 
-const Settings = ({ onNavigate, onLogout }) => {
+const Settings = ({ onNavigate, isAuthenticated, onLogout }) => {
   const [activeTab, setActiveTab] = useState('account');
   const [saved, setSaved] = useState(false);
   const [isChangingPassword, setIsChangingPassword] = useState(false);
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   const handleSave = () => {
     setSaved(true);
@@ -15,54 +15,38 @@ const Settings = ({ onNavigate, onLogout }) => {
   return (
     <div className="settings-page-wrapper">
       
-      {/* Navbar simplifiée réutilisant le style de l'accueil */}
-      <nav className="navbar" style={{ zIndex: 10, position: 'relative' }}>
-        <div className="nav-left">
-          <h1 className="nav-logo" onClick={() => onNavigate('home')}>Hive.tn</h1>
-        </div>
-        <div className="nav-right">
-          <div className="user-profile-container">
-            <div className="user-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
-              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" alt="Avatar Utilisateur" />
-            </div>
-            {showProfileMenu && (
-              <div className="profile-dropdown">
-                <div className="dropdown-header">
-                  <span className="text-bold" style={{ color: '#fff' }}>Ayoub B.</span>
-                  <span className="text-small" style={{ color: '#a1a1aa', fontSize: '13px' }}>ayoub@hive.tn</span>
-                </div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item" onClick={() => onNavigate('profile')}>👤 Profil</div>
-                <div className="dropdown-item" onClick={() => onNavigate('settings')}>⚙️ Paramètres</div>
-                <div className="dropdown-item" onClick={() => onNavigate('saved')}>🔖 Enregistrements</div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item text-danger" onClick={() => {
-                  setShowProfileMenu(false);
-                  if (onLogout) onLogout();
-                }}>🚪 Déconnexion</div>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
+      {/* Navbar Principale */}
+      <Navbar 
+        onNavigate={onNavigate} 
+        isAuthenticated={isAuthenticated} 
+        onLogout={onLogout} 
+        activeTab="settings" 
+      />
 
       <div className="settings-main">
         <h1 className="settings-page-title">Paramètres</h1>
         
-        <div className="settings-tabs">
+        <div className="settings-tabs" role="tablist" aria-label="Paramètres">
           <span 
             className={`settings-tab ${activeTab === 'account' ? 'active' : ''}`}
             onClick={() => setActiveTab('account')}
+            role="tab"
+            aria-selected={activeTab === 'account'}
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && setActiveTab('account')}
           >
             Compte
           </span>
           <span 
             className={`settings-tab ${activeTab === 'profile' ? 'active' : ''}`}
             onClick={() => setActiveTab('profile')}
+            role="tab"
+            aria-selected={activeTab === 'profile'}
+            tabIndex={0}
+            onKeyDown={(e) => e.key === 'Enter' && setActiveTab('profile')}
           >
             Modifier le profil
           </span>
-
         </div>
 
         {/* --- ONGLET: COMPTE --- */}

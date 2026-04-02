@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './Home.css';
 import './Discover.css';
+import Navbar from './Navbar';
 
-const Discover = ({ onNavigate, onLogout }) => {
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
+const Discover = ({ onNavigate, isAuthenticated, onLogout }) => {
   const [showCategoryMenu, setShowCategoryMenu] = useState(false);
   const [filterCategory, setFilterCategory] = useState("Projets Solidaires");
   const [filterSort, setFilterSort] = useState("Nouveautés");
@@ -106,40 +106,12 @@ const Discover = ({ onNavigate, onLogout }) => {
     <div className="discover-page-wrapper">
       
       {/* Navbar Principale (Hive Standard) */}
-      <nav className="navbar" style={{ zIndex: 110, position: 'relative' }}>
-        <div className="nav-left">
-          <h1 className="nav-logo" onClick={() => onNavigate('home')}>Hive.tn</h1>
-        </div>
-        <div className="nav-center">
-          <span className="nav-link active" onClick={() => onNavigate('discover')}>Découvrir</span>
-          <span className="nav-link" style={{cursor: 'pointer'}} onClick={() => onNavigate('startProject')}>Lancer un projet</span>
-        </div>
-        <div className="nav-right">
-          <button className="nav-btn-solid" style={{marginRight: '20px'}} onClick={() => onNavigate('home')}>Accueil</button>
-          <div className="user-profile-container">
-            <div className="user-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
-               <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" alt="Avatar Utilisateur" />
-            </div>
-            {showProfileMenu && (
-              <div className="profile-dropdown">
-                <div className="dropdown-header">
-                  <span className="text-bold" style={{ color: '#fff' }}>Ayoub B.</span>
-                  <span className="text-small" style={{ color: '#a1a1aa', fontSize: '13px' }}>ayoub@hive.tn</span>
-                </div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item" onClick={() => onNavigate('profile')}>👤 Profil</div>
-                <div className="dropdown-item" onClick={() => onNavigate('settings')}>⚙️ Paramètres</div>
-                <div className="dropdown-item" onClick={() => onNavigate('saved')}>🔖 Enregistrements</div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item text-danger" onClick={() => {
-                  setShowProfileMenu(false);
-                  if (onLogout) onLogout();
-                }}>🚪 Déconnexion</div>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
+      <Navbar 
+        onNavigate={onNavigate} 
+        isAuthenticated={isAuthenticated} 
+        onLogout={onLogout} 
+        activeTab="discover" 
+      />
 
       <div className="discover-main">
         
@@ -190,7 +162,7 @@ const Discover = ({ onNavigate, onLogout }) => {
                 
                 {/* Image Box */}
                 <div className="ks-card-image-box">
-                  <img src={project.image} alt={project.title} className="ks-card-image" />
+                  <img src={project.image} alt={project.title} className="ks-card-image" loading="lazy" />
                   <div 
                     className="ks-progress-line" 
                     style={{ width: `${Math.min(project.fundedPercent, 100)}%` }}
@@ -202,7 +174,7 @@ const Discover = ({ onNavigate, onLogout }) => {
                   
                   {/* Row 1: Avatar, Title, Bookmark */}
                   <div className="ks-card-top-row">
-                    <img src={project.creatorAvatar} alt={project.creatorName} className="ks-creator-avatar" />
+                    <img src={project.creatorAvatar} alt={project.creatorName} className="ks-creator-avatar" loading="lazy" />
                     <div className="ks-card-title-col">
                       <h3 className="ks-card-title">{project.title}</h3>
                       <button className="ks-bookmark-btn" onClick={(e) => {

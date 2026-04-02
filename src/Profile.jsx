@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import './Home.css';    // Réutilisation essentielle pour le style de la NavBar et des Cartes Projets
 import './Profile.css';
+import './Settings.css';
+import Navbar from './Navbar';
+import ProjectCard from './components/ProjectCard';
 
-const Profile = ({ onNavigate, onLogout }) => {
+const Profile = ({ onNavigate, isAuthenticated, onLogout }) => {
   const [activeTab, setActiveTab] = useState('created');
-  const [showProfileMenu, setShowProfileMenu] = useState(false);
 
   // Les projets créés par cet utilisateur
   const createdProjects = [
@@ -33,37 +35,13 @@ const Profile = ({ onNavigate, onLogout }) => {
         <button className="banner-btn" onClick={() => onNavigate('settings')}>Gérer vos paramètres de confidentialité</button>
       </div>
 
-      {/* Navbar simplifiée */}
-      <nav className="navbar" style={{ zIndex: 10, position: 'relative' }}>
-        <div className="nav-left">
-          <h1 className="nav-logo" onClick={() => onNavigate('home')}>Hive.tn</h1>
-        </div>
-        <div className="nav-right">
-          <button className="nav-btn-solid" style={{marginRight: '20px'}} onClick={() => onNavigate('home')}>Retour à l'accueil</button>
-          <div className="user-profile-container">
-            <div className="user-avatar" onClick={() => setShowProfileMenu(!showProfileMenu)}>
-               <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=100&q=80" alt="Avatar Utilisateur" />
-            </div>
-            {showProfileMenu && (
-              <div className="profile-dropdown">
-                <div className="dropdown-header">
-                  <span className="text-bold" style={{ color: '#fff' }}>Ayoub B.</span>
-                  <span className="text-small" style={{ color: '#a1a1aa', fontSize: '13px' }}>ayoub@hive.tn</span>
-                </div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item" onClick={() => onNavigate('profile')}>👤 Profil</div>
-                <div className="dropdown-item" onClick={() => onNavigate('settings')}>⚙️ Paramètres</div>
-                <div className="dropdown-item" onClick={() => onNavigate('saved')}>🔖 Enregistrements</div>
-                <div className="dropdown-divider"></div>
-                <div className="dropdown-item text-danger" onClick={() => {
-                  setShowProfileMenu(false);
-                  if (onLogout) onLogout();
-                }}>🚪 Déconnexion</div>
-              </div>
-            )}
-          </div>
-        </div>
-      </nav>
+      {/* Navbar Principale */}
+      <Navbar 
+        onNavigate={onNavigate} 
+        isAuthenticated={isAuthenticated} 
+        onLogout={onLogout} 
+        activeTab="profile" 
+      />
 
       <div className="profile-main">
         
@@ -99,22 +77,34 @@ const Profile = ({ onNavigate, onLogout }) => {
 
         {/* Tabs System */}
         <div className="profile-tabs-container">
-          <div className="profile-tabs">
+          <div className="profile-tabs" role="tablist" aria-label="Onglets du profil">
             <span 
               className={`profile-tab ${activeTab === 'about' ? 'active' : ''}`}
               onClick={() => setActiveTab('about')}
+              role="tab"
+              aria-selected={activeTab === 'about'}
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && setActiveTab('about')}
             >
               À propos
             </span>
             <span 
               className={`profile-tab ${activeTab === 'backed' ? 'active' : ''}`}
               onClick={() => setActiveTab('backed')}
+              role="tab"
+              aria-selected={activeTab === 'backed'}
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && setActiveTab('backed')}
             >
               Soutenus <span>0</span>
             </span>
             <span 
               className={`profile-tab ${activeTab === 'created' ? 'active' : ''}`}
               onClick={() => setActiveTab('created')}
+              role="tab"
+              aria-selected={activeTab === 'created'}
+              tabIndex={0}
+              onKeyDown={(e) => e.key === 'Enter' && setActiveTab('created')}
             >
               Créés <span>1</span>
             </span>
@@ -146,44 +136,16 @@ const Profile = ({ onNavigate, onLogout }) => {
             {/* Using grid columns specifically for profile view to maintain proportionality */}
             <div className="projects-grid" style={{ gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 350px))', justifyContent: 'center' }}>
               {createdProjects.map(project => (
-                <div key={project.id} className="project-card" style={{ cursor: 'pointer' }} onClick={() => onNavigate('projectDetails')}>
-                  <div className="project-image-container">
-                    <div className="project-badge">{project.category}</div>
-                    <img src={project.image} alt={project.title} className="project-image" />
-                  </div>
-                  <div className="project-content">
-                    <h3 className="project-title">{project.title}</h3>
-                    <div className="project-creator">{project.creator}</div>
-                    <p className="project-desc">{project.desc}</p>
-                    
-                    <div className="project-stats">
-                      <div className="progress-bar-bg">
-                        <div className="progress-bar-fill" style={{ width: `${Math.min(project.funded, 100)}%` }}></div>
-                      </div>
-                      <div className="stats-row">
-                        <div className="stat-item">
-                          <span className="stat-value">{project.funded}%</span>
-                          <span className="stat-label">financé</span>
-                        </div>
-                        <div className="stat-item" style={{ textAlign: 'center' }}>
-                          <span className="stat-value" style={{ color: '#fff' }}>{project.collected}</span>
-                          <span className="stat-label">récolté</span>
-                        </div>
-                        <div className="stat-item" style={{ textAlign: 'right' }}>
-                          <span className="stat-value" style={{ color: '#fff' }}>{project.daysLeft}</span>
-                          <span className="stat-label">jours restants</span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div style={{ marginTop: '24px' }}>
-                       <button className="settings-btn-outline" style={{ width: '100%', borderColor: '#05ce78', color: '#05ce78' }}>
-                         Gérer la campagne
-                       </button>
-                    </div>
-
-                  </div>
-                </div>
+                <ProjectCard 
+                  key={project.id} 
+                  project={project} 
+                  onNavigate={onNavigate}
+                  actions={
+                    <button className="settings-btn-outline" style={{ width: '100%', borderColor: '#05ce78', color: '#05ce78' }}>
+                      Gérer la campagne
+                    </button>
+                  }
+                />
               ))}
             </div>
           </div>
