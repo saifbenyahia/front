@@ -18,8 +18,8 @@
 }
 
 .pe-header-top {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr; /* Logo | Centre | Avatar */
   align-items: center;
   padding: 16px 40px;
 }
@@ -31,25 +31,94 @@
   cursor: pointer;
 }
 
+/* Ancienne classe conservée par compatibilité */
 .pe-header-actions {
   display: flex;
   align-items: center;
   gap: 20px;
 }
 
-.pe-save-btn {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #fff;
-  padding: 8px 16px;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: all 0.2s;
+/* Colonne centrale : centrée dans la grille */
+.pe-header-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  justify-self: center; /* Centre dans la colonne grid */
 }
 
-.pe-save-btn:hover {
+/* Colonne droite : avatar aligné à droite */
+.pe-header-right {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+/* Statut brouillon */
+.pe-draft-status {
+  font-size: 13px;
+  color: #0ce688;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ── Toggle Éditeur / Aperçu ── */
+.pe-mode-toggle {
+  display: flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  padding: 4px;
+  gap: 2px;
+}
+
+.pe-mode-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: transparent;
+  border: none;
+  color: #a1a1aa;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.pe-mode-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* État actif : Éditeur (fond neutre blanc subtil) */
+.pe-mode-btn--active {
   background: rgba(255, 255, 255, 0.1);
-  border-color: #fff;
+  color: #ffffff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* État actif : Aperçu (fond vert signature Hive.tn) */
+.pe-mode-btn--preview-active {
+  background: #0ce688 !important;
+  color: #0b0f19 !important;
+  box-shadow: 0 4px 14px rgba(12, 230, 136, 0.35) !important;
+}
+
+.pe-mode-btn--preview-active:hover {
+  background: #0ab56b !important;
+  color: #0b0f19 !important;
+}
+
+.pe-mode-icon {
+  font-size: 15px;
+  line-height: 1;
 }
 
 .pe-user-avatar {
@@ -100,6 +169,182 @@
 /* Main Content Wrapper */
 .pe-main {
   padding: 60px 40px 100px 40px;
+}
+
+/* =========================================
+   APERÇU PLEINE PAGE
+   ========================================= */
+.pe-preview-page {
+  padding: 0;
+  background: #0b0f19;
+  min-height: calc(100vh - 120px);
+}
+
+.pe-preview-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 40px 100px;
+}
+
+/* Badge "Mode Prévisualisation" */
+.pe-preview-hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.pe-preview-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(12, 230, 136, 0.08);
+  border: 1px solid rgba(12, 230, 136, 0.2);
+  color: #0ce688;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 24px;
+}
+
+.pe-preview-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #0ce688;
+  box-shadow: 0 0 8px #0ce688;
+  animation: blink 2s ease infinite;
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+.pe-preview-title {
+  font-size: 36px;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 16px;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+}
+
+.pe-preview-subtitle {
+  font-size: 18px;
+  color: #a1a1aa;
+  max-width: 700px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Corps : Image + Sidebar */
+.pe-preview-body {
+  display: flex;
+  gap: 48px;
+  align-items: flex-start;
+}
+
+.pe-preview-media {
+  flex: 2;
+}
+
+.pe-preview-image-placeholder {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #a1a1aa;
+  font-size: 15px;
+}
+
+/* Sidebar financement */
+.pe-preview-sidebar {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 32px;
+  position: sticky;
+  top: 100px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.pe-preview-amount {
+  font-size: 36px;
+  font-weight: 800;
+  color: #0ce688;
+  letter-spacing: -1px;
+  line-height: 1;
+}
+
+.pe-preview-goal {
+  font-size: 14px;
+  color: #a1a1aa;
+}
+
+.pe-preview-progress-bg {
+  width: 100%;
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.pe-preview-progress-fill {
+  height: 100%;
+  background: #0ce688;
+  border-radius: 3px;
+  transition: width 0.6s ease;
+}
+
+.pe-preview-stats {
+  display: flex;
+  gap: 24px;
+}
+
+.pe-preview-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.pe-preview-stat-val {
+  font-size: 22px;
+  font-weight: 700;
+  color: #fff;
+}
+
+.pe-preview-stat-lbl {
+  font-size: 12px;
+  color: #a1a1aa;
+}
+
+.pe-preview-cta {
+  width: 100%;
+  background: #0ce688;
+  color: #0b0f19;
+  border: none;
+  padding: 16px;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: not-allowed;
+  opacity: 0.5;
+  margin-top: 8px;
+}
+
+.pe-preview-notice {
+  font-size: 12px;
+  color: #71717a;
+  text-align: center;
+  line-height: 1.5;
+  margin: 0;
 }
 
 /* Layout Split for Basics Tab */
